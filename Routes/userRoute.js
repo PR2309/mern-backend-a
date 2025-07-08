@@ -7,12 +7,6 @@ const Router=express.Router();
 
 // Route Paths
 
-// connection checking
-Router.get("/",(req,res)=>{
-    res.send("MongoDB Connected");
-});
-
-
 // registering
 Router.post("/register",register);
 

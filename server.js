@@ -30,5 +30,9 @@ mongoose.connect(`mongodb+srv://${dbuser}:${dbpass}@cluster0.db4tdjc.mongodb.net
 });
 
 app.use(express.json());
+// connection checking
+app.get("/",(req,res)=>{
+    res.send("Backend Connected");
+});
 // Routes
 app.use('/api/users',userRouter); // for user related APIs
