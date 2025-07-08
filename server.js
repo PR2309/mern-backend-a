@@ -1,0 +1,34 @@
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import userRouter from './Routes/userRoute.js'; // userRoute is a variable in this file
+
+dotenv.config(); // loads environment variables from .env file
+
+const app=express();
+const PORT=process.argv[2] || 8080;
+// const dbuser=encodeURIComponent(process.env.DBUSER);
+// const dbpass=encodeURIComponent(process.env.DBPASS);
+
+const dbuser=encodeURIComponent(process.env.MONGO_USER);
+const dbpass=encodeURIComponent(process.env.MONGO_PASS);
+
+// const dbuser = encodeURIComponent(process.env.MONGO_USER || process.env.DBUSER);
+// const dbpass = encodeURIComponent(process.env.MONGO_PASS || process.env.DBPASS);
+const merndb = "merndb"; //DB NAME
+
+// creates a database named lpu1
+// and connects to it using the provided credentials
+// authsource=admin is used to authenticate the user against the admin database
+// mongoose.connect(`mongodb://${dbuser}:${dbpass}@localhost:/lpu1?authsource=admin`) // for MongoDB Compass
+mongoose.connect(`mongodb+srv://${dbuser}:${dbpass}@cluster0.db4tdjc.mongodb.net/${merndb}?retryWrites=true&w=majority&appName=Cluster0`) // for MongoDB Atlas
+.then( () =>{ // returns a promise
+    app.listen(PORT,(err)=>{ // first connect to database then run the server
+        if(err){console.log(`Something went wrong,\n Error:\n${err}`);}
+        else{console.log(`Server is running at http://localhost:${PORT}`);}
+    });
+});
+
+app.use(express.json());
+// Routes
+app.use('/api/users',userRouter); // for user related APIs
