@@ -11,13 +11,14 @@ const Router=express.Router();
 Router.post("/register",register);
 
 // updating user
-Router.patch("/:id",authenticate,authorize("admin"),userUpdate);
+Router.patch("update-user/:id",authenticate,authorize("admin"),userUpdate);
 
 // deleting user
-Router.delete("/:id",userDelete);
+Router.delete("delete-user/:id",userDelete);
 
 // Fetching all users list
-Router.get("/all-users",authenticate, authorize("admin"),showUsers);
+// Router.get("/all-users",authenticate, authorize("admin"),showUsers);
+Router.get("/all-users",showUsers);
 
 // login
 Router.post("/login",login);
