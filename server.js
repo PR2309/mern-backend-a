@@ -56,7 +56,7 @@
 // });
 // // Routes
 // app.use('/api/users',userRouter); // for user related APIs
-\
+
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -70,8 +70,8 @@ const app = express();
 
 // --- CORS Configuration ---
 const allowedOrigins = [
-'http://localhost:5173',
-  'https://mern-frontend-a-nine.vercel.app', // add your deployed frontend domain if needed
+'http://localhost:5173'
+//   'https://mern-backend-a-nine.vercel.app', // add your deployed frontend domain if needed
 ];
 
 app.use(cors({
