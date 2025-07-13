@@ -2,7 +2,41 @@ import bcrypt, { hashSync, compareSync } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import userModel from '../Models/userModel.js'; // importing userModel from userModel.js
 
+import { OAuth2Client } from 'google-auth-library';
+const client= new OAuth2Client(process.env.GOOGLE_AUTH)
+
 const SECRET="mySecretKey";
+
+const googleLogin = async (req,res) => {
+    const {token}=req.body;
+    try{
+        const ticket=await client.verifyIdToken({
+            idToken:token,
+            audience:process.env.GOOGLE_AUTH
+        });
+
+        const payload= ticket.getPayload();
+        const { email, name = "Unknown", sub } = payload;
+        if (!email || !sub) {
+            return res.status(400).json({ message: "Invalid Google payload" });
+        }
+        let user=await userModel.findOne({email}); // if already exists
+        if(!user){
+            user = await userModel.create({name,email,password:sub,role:"user"});
+        }
+
+        const userObj={
+            id:user._id,
+            email:user.email,
+            role:user.role
+        }
+        const jwtToken=jwt.sign(userObj,SECRET,{expiresIn:"1h"});
+        res.status(200).json({message:"Google Login Successfull", token:jwtToken, user});
+    }catch(err){
+        console.log(err);
+        res.status(401).json({message:"Google login failed", error:err.message});
+    }
+};
 
 const profile =async (req,res) => {
     try{
@@ -98,4 +132,4 @@ const showUsers = async(req,res)=>{
     }
 };
 
-export {register, login, userUpdate, userDelete, showUsers,profile, updateProfile};
+export {register, login, userUpdate, userDelete, showUsers,profile, updateProfile, googleLogin};

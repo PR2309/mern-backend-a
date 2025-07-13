@@ -1,4 +1,5 @@
 import express from 'express';
+import { googleLogin } from '../Controllers/userController.js';
 import {authenticate, authorize} from '../Middlewares/auth.js'; // importing middlewares for authentication and authorization
 import {register, login, profile, updateProfile, userUpdate, userDelete, showUsers} from '../Controllers/userController.js'; // importing register function from userController.js
 
@@ -8,6 +9,7 @@ const Router=express.Router();
 
 // registering
 Router.post("/register",register);
+Router.post("/google-login",googleLogin);
 
 // login
 Router.post("/login",login);
