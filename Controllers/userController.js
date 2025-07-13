@@ -4,6 +4,30 @@ import userModel from '../Models/userModel.js'; // importing userModel from user
 
 const SECRET="mySecretKey";
 
+const profile =async (req,res) => {
+    try{
+        const id=req.params.id;
+        const result=await userModel.findOne({_id:id});
+        res.status(200).json(result);
+    }catch(err){
+        res.status(300).json({message:"Failed to fetch User profile"});
+    }
+};
+
+const updateProfile = async(req,res) => {
+    try{
+        const id=req.params.id;
+        const {name, email, password } =req.body;
+        const hashedPwd = bcrypt.hashSync(password,10);
+        const userObj={name,email, password:hashedPwd};
+        const result = await userModel.findByIdAndUpdate(id,userObj);
+        res.status(200).json(result);
+    }catch(err){
+        console.log(err);
+        res.status(400).json({message:"Failed to update details..."});
+    }
+};
+
 const register = async (req,res)=>{
     try{
         const{name,email,password,role}=req.body;
@@ -40,6 +64,7 @@ const userUpdate = async(req,res)=>{
     try{
         const id=req.params.id;
         const body=req.body;
+        if (body.password) {body.password = await bcrypt.hash(body.password, 10);}
         const user=await userModel.findByIdAndUpdate(id,body,{new:true});
         // findByIdAndUpdate() returns the updated document if found, otherwise null
         // new:true returns the updated document
@@ -73,4 +98,4 @@ const showUsers = async(req,res)=>{
     }
 };
 
-export {register, login, userUpdate, userDelete, showUsers};
+export {register, login, userUpdate, userDelete, showUsers,profile, updateProfile};
