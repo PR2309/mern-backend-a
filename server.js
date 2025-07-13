@@ -70,13 +70,20 @@ const app = express();
 
 // --- CORS Configuration ---
 const allowedOrigins = [
-'http://localhost:5173'
-//   'https://mern-backend-a-nine.vercel.app', // add your deployed frontend domain if needed
+    'http://localhost:5173',
+    'https://mern-frontend-a-snowy.vercel.app', // ✅ replace with actual frontend Vercel URL
 ];
 
 app.use(cors({
-origin: allowedOrigins[0],
-  credentials: true, // set to true if you use cookies/auth headers
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        } else {
+        callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
 }));
 // --- End CORS Configuration ---
 
