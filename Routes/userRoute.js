@@ -21,10 +21,11 @@ Router.patch("/update-user/:id",authenticate,authorize("admin"),userUpdate);
 Router.delete("/delete-user/:id",userDelete);
 
 // Admin getting user details
-Router.get("/:id", authenticate, authorize("admin"), profile);
+// Router.get("/:id", authenticate, authorize("admin"), profile);
 
 // Fetching all users list
-Router.get("/all-users",authenticate, authorize("admin"),showUsers);
+Router.get("/all-users",showUsers);
+// Router.get("/all-users",authenticate, authorize("admin"),showUsers);
 
 Router.get("/:id/profile", authenticate, profile);
 Router.patch("/:id/profile", authenticate, updateProfile);
