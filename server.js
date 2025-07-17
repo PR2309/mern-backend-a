@@ -36,20 +36,20 @@ const merndb = "merndb"; //DB NAME
 //     });
 // });
 
-// mongoose.connect(`mongodb+srv://${dbuser}:${dbpass}@cluster0.db4tdjc.mongodb.net/${merndb}?retryWrites=true&w=majority&appName=Cluster0`) // for MongoDB Atlas
-// .then( () =>{ // returns a promise
-//     app.listen(PORT,()=>{ // first connect to database then run the server
-//         console.log(`Server is running live at vercel`);
-//     });
-// });
-
-// For Testing
-mongoose.connect(`mongodb://localhost:27017/mernCafe`) // for MongoDB Atlas
+mongoose.connect(`mongodb+srv://${dbuser}:${dbpass}@cluster0.db4tdjc.mongodb.net/${merndb}?retryWrites=true&w=majority&appName=Cluster0`) // for MongoDB Atlas
 .then( () =>{ // returns a promise
-    app.listen(8080,()=>{ // first connect to database then run the server
-        console.log(`Server is running at http://localhost:8080`);
+    app.listen(PORT,()=>{ // first connect to database then run the server
+        console.log(`Server is running live at vercel`);
     });
 });
+
+// // For Testing
+// mongoose.connect(`mongodb://localhost:27017/mernCafe`) // for MongoDB Atlas
+// .then( () =>{ // returns a promise
+//     app.listen(8080,()=>{ // first connect to database then run the server
+//         console.log(`Server is running at http://localhost:8080`);
+//     });
+// });
 
 
 // connection checking
