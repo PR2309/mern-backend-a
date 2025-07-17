@@ -58,6 +58,8 @@ app.get("/",(req,res)=>{
 });
 // Routes
 app.use('/api/users',userRouter); // for user related APIs
+app.use('/api/products',productRouter); // for products related APIs
+app.use('/api/orders',orderRouter); // for orders related APIs
 
 
 // import express from 'express';
