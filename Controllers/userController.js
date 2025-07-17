@@ -106,6 +106,7 @@ const userUpdate = async(req,res)=>{
         if(!user){return res.status(404).json({message:"User not found"});}
         res.status(200).json({message:"User updated successfully", user});
     } catch(err){
+        console.log(err);
         res.status(400).json({message:"Something went wrong", error:err});
     }
 };
@@ -123,13 +124,49 @@ const userDelete = async(req,res)=>{
     }
 };
 
+const addUser = async (req,res) => {
+    try{
+        const body = req.body;
+        const hashedPwd = bcrypt.hashSync(body.password,10);
+        body.password=hashedPwd;
+        const result = await userModel.create(body);
+        res.status(200).json(result);
+    } catch(err){
+        console.log(err);
+        res.status(500).json({message:"Failed to add new user"});
+    }
+};
+
 const showUsers = async(req,res)=>{
     try{
-        const usersList=await userModel.find();
-        res.status(200).json(usersList);
+        const {page=1,limit=2,search=""}=req.query;
+        console.log(page, limit, search);
+        const skip = (page-1)*limit;
+        const count = await userModel.countDocuments({ name: { $regex: search, $options: "i" } });
+        const totalPages = Math.ceil(count / limit); // total pages
+        // const usersList=await userModel.find();
+        const users = await userModel
+            .find({ name: { $regex: search, $options: "i" } })
+            .skip(skip)
+            .limit(limit)
+            .sort({updatedAt:-1});
+        console.log({users, totalPages, currentPage:page});
+        res.status(200).json({users, totalPages, currentPage:page});
     }catch(err){
         res.status(400).json({message:"Something went wrong", error:err});
     }
 };
 
-export {register, login, userUpdate, userDelete, showUsers,profile, updateProfile, googleLogin};
+
+const getUser = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await userModel.findOne({ _id: id });
+        res.status(200).json(result);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ message: "Something went wrong" });
+    }
+};
+
+export {register, login, userUpdate, userDelete, showUsers, profile, updateProfile, googleLogin, getUser, addUser};
